@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RefillSoleisLiquidMat
+  m_Shader: {fileID: -6465566751694194690, guid: 4f8977a4abf1b5d4a81875ca49dd8606, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_1ac0051a96b44444a6ae3a53f04a3592: 0.1
+    - Vector1_5ee74701f19546bd8fc883cbae54b410: 1.3
+    - Vector1_b41964bde7a64c84ae534e38ddac298a: 0.04
+    - Vector1_bc4c5a6f255f49c88be8e2f511b5c38d: 0.75
+    - Vector1_ca5a5361bbd74d23bbd21d26951c1c42: 1.02
+    - Vector1_e1a3379a5cbd4f9da796506de81086a5: 0.5
+    - Vector1_e6420219cee8498885762145ca80b98b: 4.2
+    - Vector1_e89d631308414e5d814d022a90869bd7: 5
+    m_Colors:
+    - Color_5e880da0239c46b4990f9379a1b2edbb: {r: 0.025382884, g: 0, b: 0.008660043, a: 0}
+    - Color_8fe34bc3527d41088c5b787912447e3c: {r: 0.10153155, g: 0.10153155, b: 0.10153155, a: 0}
+    - Color_f4ad2f7b8f2d40f4873e593ac77c9563: {r: 3.3645034, g: 0, b: 3.9999995, a: 1}
+    - Vector2_da53b4f96cc0408aa1e6f4ae71ac180d: {r: 0.05, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []

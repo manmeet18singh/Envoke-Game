@@ -1,0 +1,165 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using UnityEngine;
+
+/// <summary>
+/// ShockWave (Soleis + Cinos):
+///     Base Spell Description:
+///         Player casts a 360-degree shockwave that deals minor damage (~15) and pushes 
+///         enemies within 15 meters back by up to 10 meters. 
+///         
+///     Upgrade 1:
+///         Initial damage is increased by 5 and the Enemies are stunned for 1 second. 
+///     
+///     Upgrade 2: 
+///         The Shockwave now stuns for 3 seconds and pushes enemies further away
+///         
+///     Upgrade 3:
+///         The ShockWave will pull in enemies
+///         
+/// </summary>
+public class ShockWave : MonoBehaviour
+{
+    ShockWaveData mSpellData;
+
+    #region Properties
+    [Header("Effects")]
+    [SerializeField] private GameObject mShockWave;
+
+    [Header("SFX")]
+    [SerializeField] private string[] mShockWaveSFX;
+    #endregion
+
+    #region State Variables
+    Coroutine mCoroutine;
+    bool mAnimate;
+    #endregion
+
+    #region References
+    private GameObject mPlayer;
+    private LayerMask mEnemyLayer;
+    #endregion
+
+    /// <summary>
+    /// Starts off the initial blast and then arcs through each nearby enemy that can be hit.
+    /// </summary>
+    IEnumerator ShockWaveBlast()
+    {
+
+        yield return new WaitForSeconds(1f);
+        if (mSpellData.CanPull)
+        {
+            CastShockWave(Physics.OverlapSphere(transform.position, 5f, mEnemyLayer));
+        }
+        else
+        {
+            CastShockWave(Physics.OverlapSphere(transform.position, 10f, mEnemyLayer));
+        }
+
+        AudioManager.PlayRandomSFX(mShockWaveSFX);
+
+        mCoroutine = null;
+        Destroy(gameObject);
+        yield return null;
+    }
+
+    public void Initialize(ref ShockWaveData _mSpellData)
+    {
+        mSpellData = _mSpellData;
+        mPlayer = GameManager.Instance.mPlayer;
+        mEnemyLayer = LayerMask.GetMask("Enemy");
+        mCoroutine = StartCoroutine(ShockWaveBlast());
+    }
+
+    private void OnDestroy()
+    {
+        if (mCoroutine != null)
+            StopCoroutine(mCoroutine);
+    }
+
+    #region Spell Logic
+    /// <summary>
+    /// The initial blast pushes away all nearby enemies and damages them.
+    /// </summary>
+    /// 
+    /// <returns>The Enemy that received the initial blast. If this is null, 
+    /// then Giga Blast fizzles out.</returns>
+    private void CastShockWave(Collider[] colliders)
+    {
+        if (!mSpellData.CanPull)
+        {
+            foreach (Collider collider in colliders)
+            {
+                if (collider.GetComponent<Animator>().enabled == true)
+                {
+                    collider.GetComponent<Animator>().enabled = false;
+                    collider.GetComponent<IAffectable>().TakeDamage(mSpellData.Damage, AttackFlags.Player | AttackFlags.Lightning);
+                    collider.GetComponent<Rigidbody>().AddExplosionForce(mSpellData.PushForce, transform.position, mSpellData.BlastRadius);
+                    collider.GetComponent<Enemy>().Freeze(mSpellData.StunDuration);
+                    mAnimate = true;
+                }
+
+                if (collider.GetComponent<Animator>().enabled == false)
+                {
+                    collider.GetComponent<Animator>().enabled = true;
+                }
+            }
+        }
+        else
+        {
+            foreach (Collider collider in colliders)
+            {
+                if (collider.GetComponent<Animator>().enabled == true)
+                {
+                    collider.GetComponent<Animator>().enabled = false;
+                    collider.GetComponent<IAffectable>().TakeDamage(mSpellData.Damage, AttackFlags.Player | AttackFlags.Lightning);
+                    Rigidbody enemy = collider.GetComponent<Rigidbody>();
+                    PullMeIn(enemy);   
+                    enemy.AddExplosionForce(mSpellData.PushForce, transform.position, mSpellData.BlastRadius);
+
+                    collider.GetComponent<Enemy>().Freeze(mSpellData.StunDuration);
+                    mAnimate = true;
+                }
+
+                if (collider.GetComponent<Animator>().enabled == false)
+                {
+                    collider.GetComponent<Animator>().enabled = true;
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region Helper Functions
+    /// <summary>
+    /// Finds the nearest enemy to the lightning bolt source.
+    /// </summary>
+    /// <param name="_hitColliders">Enemies within range of source.</param>
+    /// <param name="_source">The Location where the lightning bolt originated from.</param>
+    /// <param name="_sourceObject">The object that triggered the search. This object won't be considered.</param>
+    /// <returns>Collider of closest enemy, or null if <paramref name="_hitColliders"/> is empty.</returns>
+    private void PullMeIn(Rigidbody enemy)
+    {
+        float distanceToSpell = Vector3.Distance(enemy.transform.position, transform.position);
+
+        if (distanceToSpell < .1)
+        {
+            enemy.transform.position = transform.position;
+        }
+
+        Vector3 pullDirection = transform.position - enemy.transform.position;
+        Vector3 pullForce = pullDirection.normalized * 16;
+
+        if (enemy.velocity.magnitude < 10 && distanceToSpell > 2)
+        {
+            enemy.AddForce(pullForce, ForceMode.Acceleration);
+        }
+        else
+        {
+            enemy.velocity = pullDirection.normalized * 10; 
+        }
+    }
+    #endregion
+}
