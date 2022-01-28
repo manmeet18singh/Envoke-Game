@@ -1,4 +1,7 @@
-<img src="https://img.itch.zone/aW1nLzc2MTI4OTUucG5n/original/ZfVGzE.png"><p>Tune into what you were taught at in the Schools of Cinos, Edur and Soleis to escape the Wizard Tower! Can you defeat all of the Wizard's Minons and escape before they beat you?<br></p>
+<img src="https://img.itch.zone/aW1nLzc2MTI4OTUucG5n/original/ZfVGzE.png">
+<a href="https://manmeetsingh.itch.io/envoke">Play Envoke Here!</a>
+<p>Tune into what you were taught at in the Schools of Cinos, Edur and Soleis to escape the Wizard Tower! Can you defeat all of the Wizard's Minons and escape before they beat you?<br></p>
+<a href="https://youtu.be/Kka2MpftzUA">Envoke Trailer</a>
 <p>Made for Full Sail University by the Generous Koalas for the Midterm Project.<br></p>
 <h5>Credits: </h5>
 <ul><li>Manmeet Singh</li><li>William Bowers</li><li>Matthew Steinhardt </li><li>Yashwant Patel </li><li>Nicholas Martin</li><li>Aiden Lucas</li></ul>
@@ -14,4 +17,3 @@
 <h5>Tools Used      </h5>
 <ul><li>Unity 
 </li><li>Adobe&nbsp;Photoshop</li><li>Blender</li></ul>
-<a href="https://youtu.be/Kka2MpftzUA">Envoke Trailer</a>
