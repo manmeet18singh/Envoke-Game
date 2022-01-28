@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7a0e3afcdf992349806fd64a655d2ba, type: 3}
+  m_Name: ShockWaveUpgradePath2
+  m_EditorClassIdentifier: 
+  <UpgradeIcon>k__BackingField: {fileID: 21300000, guid: 70cc91936e29f2444afbdbc06fdee0f1, type: 3}
+  <Rarity>k__BackingField: 1
+  <Weight>k__BackingField: 50
+  <Cost>k__BackingField: 300
+  <UpgradeName>k__BackingField: Ravaging Stun
+  <UpgradeDesc>k__BackingField: Shockwave now stuns enemies
+  mUpgradeEvent: {fileID: 11400000, guid: 93a44280ebd4e284788541f5e7db92b5, type: 2}

@@ -1,2 +1,0 @@
-C:\Users\Manmeet Singh\Desktop\2110-2112---Generous-Koalas\Codebase\Envoke\obj\Debug\NavMeshComponentsEditor.csproj.AssemblyReference.cache
-C:\Users\Manmeet Singh\Desktop\2110-2112---Generous-Koalas\Codebase\Envoke\obj\Debug\NavMeshComponentsEditor.csproj.CoreCompileInputs.cache

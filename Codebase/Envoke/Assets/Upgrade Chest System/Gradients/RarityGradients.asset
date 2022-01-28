@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f681a928ca0ba94db87786167f4913c, type: 3}
+  m_Name: RarityGradients
+  m_EditorClassIdentifier: 
+  mGradients:
+  - {fileID: 11400000, guid: 1c4b63cc54803d249ae6a5d0c190c3a9, type: 2}
+  - {fileID: 11400000, guid: 2ad30ccb8358a8043a0179a0aa997498, type: 2}
+  - {fileID: 11400000, guid: 5ada896bb69f11540a46a94ffebe56a4, type: 2}

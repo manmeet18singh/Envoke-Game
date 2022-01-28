@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e5f377b85a892842b5895dd896b7e16, type: 3}
+  m_Name: ThreeMaxCinosPathUpgradeSO
+  m_EditorClassIdentifier: 
+  <UpgradeIcon>k__BackingField: {fileID: 21300000, guid: 5a4bc3aa90e722744a5a8431dd42bf8c, type: 3}
+  <Rarity>k__BackingField: 2
+  <Weight>k__BackingField: 50
+  <Cost>k__BackingField: 0
+  <UpgradeName>k__BackingField: +3 Cinos Lumes
+  <UpgradeDesc>k__BackingField: Increase maximum capacity of Cinos lumes
+  mLumeType: 1
+  mAmount: 3
+  mUpgradeEvent: {fileID: 11400000, guid: ab0a5e26249ce144b8cb76948e1edcec, type: 2}

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f5ea7802079a447ae13c3dc0e0929e, type: 3}
+  m_Name: IncreaseRangeUpgrade
+  m_EditorClassIdentifier: 
+  <UpgradeIcon>k__BackingField: {fileID: 21300000, guid: 86b6c02ca1e02f845ad33015bfa59fd1, type: 3}
+  <Rarity>k__BackingField: 2
+  <Weight>k__BackingField: 25
+  <Cost>k__BackingField: 300
+  <UpgradeName>k__BackingField: Range Upgrade
+  <UpgradeDesc>k__BackingField: Greatly Increases the distance you can Blink.
+  mAmount: 25
+  mUpgradeEvent: {fileID: 11400000, guid: 1e5f395829bdd204e99761de0f5273db, type: 2}

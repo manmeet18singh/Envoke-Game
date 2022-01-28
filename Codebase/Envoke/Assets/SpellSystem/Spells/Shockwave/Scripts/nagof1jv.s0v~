@@ -1,0 +1,218 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// ShockWave (Soleis + Cinos):
+///     Base Spell Description:
+///         Player casts a 360-degree shockwave that deals minor damage (~15) and pushes 
+///         enemies within 15 meters back by up to 10 meters. 
+///         
+///     Upgrade 1:
+///         Initial damage is increased by 5 and the Enemies are stunned for 1 second. 
+///     
+///     Upgrade 2: 
+///         The Shockwave now stuns for 3 seconds and pushes enemies further away
+///         
+///     Upgrade 3:
+///         The ShockWave will pull in enemies
+///         
+/// </summary>
+public class ShockWave : MonoBehaviour
+{
+    ShockWaveData mSpellData;
+
+    #region Properties
+    [Header("Effects")]
+    [SerializeField] private GameObject mShockWave;
+
+    [Header("SFX")]
+    [SerializeField] private string[] mShockWaveSFX;
+    #endregion
+
+    #region State Variables
+    Coroutine mCoroutine;
+    #endregion
+
+    #region References
+    private GameObject mPlayer;
+    private LayerMask mEnemyLayer;
+    #endregion
+
+    /// <summary>
+    /// Starts off the initial blast and then arcs through each nearby enemy that can be hit.
+    /// </summary>
+    IEnumerator ShockWaveBlast()
+    {
+
+            yield return new WaitForSeconds(1f);
+            Collider[] mColliders = Physics.OverlapSphere(transform.position, 5f, mEnemyLayer);
+            foreach (Collider collider in mColliders)
+            {
+                collider.GetComponent<IAffectable>().TakeDamage(mSpellData.Damage, AttackFlags.Player | AttackFlags.Lightning);
+            }
+            AudioManager.PlayRandomSFX(mShockWaveSFX);
+
+            yield return null;
+
+#if UNITY_EDITOR
+            Debug.Log("Toggled ShockWave trigger");
+#endif
+
+        Destroy(gameObject.transform.parent.gameObject);
+    }
+
+    public void Initialize(ref ShockWaveData _mSpellData)
+    {
+        mSpellData = _mSpellData;
+        mPlayer = GameManager.Instance.mPlayer;
+        mEnemyLayer = LayerMask.GetMask("Enemy");
+        mCoroutine = StartCoroutine(ShockWaveBlast());
+    }
+
+    private void OnDestroy()
+    {
+        if (mCoroutine != null)
+            StopCoroutine(mCoroutine);
+    }
+
+    #region Spell Logic
+    /// <summary>
+    /// The initial blast pushes away all nearby enemies and damages them.
+    /// </summary>
+    /// 
+    /// <returns>The Enemy that received the initial blast. If this is null, 
+    /// then Giga Blast fizzles out.</returns>
+    private Enemy InitialBlast()
+    {
+        Ray ray = GameManager.Instance.mMainCam.ScreenPointToRay(Mouse.current.position.ReadValue());
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, hitMask))
+        {
+
+        }
+            //        Debug.Log("mPLayer: " + mPlayer.name);
+            //        Vector3 lightningCenterPoint = mPlayer.transform.position + (mPlayer.transform.forward * mSpellData.BlastLength);
+
+            //        // Find all enemies hit by initial blast
+            //        Collider[] hitColliders = Physics.OverlapBox(lightningCenterPoint, new Vector3(mSpellData.BlastLength, mSpellData.BlastWidth, mSpellData.BlastWidth),
+            //            mPlayer.transform.rotation, mEnemyLayer);
+
+            //#if UNITY_EDITOR
+            //        Debug.Log("Initial blast hit " + hitColliders.Length + " enemies.");
+            //#endif
+
+            //        Collider nearestEnemyCollider = GetNearestEnemy(hitColliders, lightningCenterPoint);
+
+            //        if (nearestEnemyCollider != null)
+            //        {
+            //            Enemy initialHitEnemy = nearestEnemyCollider.GetComponent<Enemy>();
+            //            // Stun
+            //            //Debug.Log("Stunning for " + mSpellData.InitialStunDuration + " seconds.");
+            //            initialHitEnemy.Freeze(mSpellData.InitialStunDuration);
+            //            // Mark enemy as being affected by ShockWave (used for arc logic)
+            //            initialHitEnemy.gameObject.AddComponent<AffectedByShockWave>();
+            //            // Apply initial damage
+            //            //Debug.Log("Dealing " + mSpellData.InitialDamage + " initial damage to to " + initialHitEnemy.name + " (current health: " + initialHitEnemy.mHealth.CurrentHealth + " )");
+            //            initialHitEnemy.mHealth.TakeDamage(mSpellData.InitialDamage, AttackFlags.Player | AttackFlags.Lightning);
+
+            //            SpawnLightningBolt(mPlayer, initialHitEnemy.gameObject);
+            //            AudioManager.PlayRandomSFX(mInitialBlastSFX);
+
+            //            return initialHitEnemy;
+            //        }
+            //        else
+            //        {
+            //            // TODO - Show fizzle out effect potentially
+            //        }
+
+            //        return null;
+        }
+
+    /// <summary>
+    /// Finds the next enemy for the lightning to jump to. If an enemy is found, 
+    /// it is stunned and has damage applied to it.
+    /// </summary>
+    /// <param name="_arcSource">The source of the previous arc.</param>
+    /// <returns>The next enemy that was hit. This will be the source of the next arc. If no enemy is found, returns null.</returns>
+    private Enemy Arc(GameObject _arcSource)
+    {
+        Collider[] nearbyEnemies = Physics.OverlapSphere(_arcSource.transform.position, mSpellData.ArcJumpRadius, mEnemyLayer);
+        Collider enemyCollider = GetNearestEnemy(nearbyEnemies, _arcSource.transform.position, _arcSource);
+        Enemy nextEnemy = enemyCollider == null ? null : enemyCollider.GetComponent<Enemy>();
+
+        if (nextEnemy != null)
+        {
+            SpawnLightningBolt(_arcSource, nextEnemy.gameObject);
+            //Debug.Log("Arcing");
+            AudioManager.PlayRandomSFX(mArcSFX);
+
+            nextEnemy.Freeze(mSpellData.ArcStunDuration);
+            nextEnemy.gameObject.AddComponent<AffectedByShockWave>();
+            //Debug.Log("Dealing " + mArcDamage + " arc damage to to " + nextEnemy.name);
+            nextEnemy.mHealth.TakeDamage(mSpellData.ArcDamage, AttackFlags.Player | AttackFlags.Lightning);
+        }
+
+        return nextEnemy;
+    }
+
+    /// <summary>
+    /// Spawns the visual lightning bolt effect used during the intial blast and the 
+    /// arc.
+    /// </summary>
+    /// <param name="_source">Where the lightning bolt spawns from.</param>
+    /// <param name="_destination">Where the lightning bolt hit. This is the enemy game object.</param>
+    private void SpawnLightningBolt(GameObject _source, GameObject _destination)
+    {
+        GameObject lightningBolt = Instantiate(mLightningBolt, _source.transform.position, Quaternion.identity);
+        LineController lineController = lightningBolt.GetComponent<LineController>();
+        lineController.mSource = _source;
+        lineController.mDestination = _destination;
+    }
+
+    #endregion
+
+    #region Helper Functions
+    /// <summary>
+    /// Finds the nearest enemy to the lightning bolt source.
+    /// </summary>
+    /// <param name="_hitColliders">Enemies within range of source.</param>
+    /// <param name="_source">The Location where the lightning bolt originated from.</param>
+    /// <param name="_sourceObject">The object that triggered the search. This object won't be considered.</param>
+    /// <returns>Collider of closest enemy, or null if <paramref name="_hitColliders"/> is empty.</returns>
+    private Collider GetNearestEnemy(Collider[] _hitColliders, Vector3 _source, GameObject _sourceObject = null)
+    {
+        float nearestEnemyDistance = -1;
+        Collider nearestEnemyCollider = null;
+
+        foreach (Collider collider in _hitColliders)
+        {
+            // Ignore source enemy
+            if (_sourceObject != null && _sourceObject == collider.gameObject)
+                continue;
+
+            float distance = (collider.transform.position - _source).magnitude;
+
+            // Skip over enemies that have recently been shocked (unless spell is upgraded)
+            if (!mSpellData.ArcCanBacktrack && collider.GetComponent<AffectedByShockWave>() != null)
+                continue;
+
+            // Finds closest enemy
+            if (nearestEnemyDistance == -1 || distance < nearestEnemyDistance)
+            {
+                Enemy enemy = collider.GetComponent<Enemy>();
+                // Ignore dead enemies
+                if (enemy == null || enemy.mHealth.CurrentHealth <= 0)
+                    continue;
+                nearestEnemyDistance = distance;
+                nearestEnemyCollider = collider;
+            }
+        }
+
+        // Will return null if _hitColliders[] is empty
+        return nearestEnemyCollider;
+    }
+    #endregion
+}
